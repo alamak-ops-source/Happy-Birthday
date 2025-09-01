@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Happy Birthday Yana !</title>
+  <link rel="icon" type="image/png" href="2.png">
+  <style>
+    /* Reset */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background: radial-gradient(circle at center, #1a1a1a, #000);
+      overflow: hidden;
+      cursor: pointer;
+      position: relative;
+    }
+
+    /* Birthday Message */
+    h1 {
+      font-family: "Poppins", sans-serif;
+      font-size: 2.8rem;
+      text-align: center;
+      line-height: 1.5;
+      letter-spacing: 3px;
+      background: linear-gradient(270deg, #ff9a9e, #fad0c4, #fbc2eb, #a18cd1, #fcb69f);
+      background-size: 400% 400%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: gradientMove 6s ease infinite, popIn 2s ease forwards;
+      opacity: 0;
+      transform: scale(0.5) rotate(-10deg);
+      text-shadow: 0 0 25px rgba(255, 255, 255, 0.7);
+      margin-bottom: 60px; /* more space for cake */
+    }
+
+    @keyframes gradientMove {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    @keyframes popIn {
+      0% { opacity: 0; transform: scale(0.5) rotate(-10deg); }
+      50% { opacity: 1; transform: scale(1.2) rotate(5deg); }
+      100% { opacity: 1; transform: scale(1) rotate(0); }
+    }
+
+    /* Cake 🎂 */
+    .cake {
+      position: relative;
+      width: 180px;
+      height: 120px;
+      background: #ffb347;
+      border-radius: 10px 10px 20px 20px;
+      box-shadow: inset 0 -10px #e38b29;
+      animation: popCake 1.5s cubic-bezier(.68,-0.55,.27,1.55) forwards;
+      opacity: 0;
+      transform: translateY(100px) scale(0.8);
+    }
+
+    @keyframes popCake {
+      0% { opacity: 0; transform: translateY(100px) scale(0.8); }
+      60% { opacity: 1; transform: translateY(-20px) scale(1.05); }
+      80% { transform: translateY(10px) scale(0.95); }
+      100% { transform: translateY(0) scale(1); }
+    }
+
+    .icing {
+      position: absolute;
+      top: -20px;
+      width: 100%;
+      height: 40px;
+      background: pink;
+      border-radius: 15px 15px 0 0;
+      box-shadow: inset 0 -5px #ff6f91;
+    }
+
+    .candle {
+      position: absolute;
+      width: 10px;
+      height: 40px;
+      background: #fff;
+      top: -50px;
+      left: calc(50% - 5px);
+      border-radius: 3px;
+      box-shadow: 0 0 5px rgba(255,255,255,0.6);
+    }
+
+    .flame {
+      position: absolute;
+      top: -18px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 12px;
+      height: 18px;
+      background: radial-gradient(ellipse at center, #ffec85, #ff9900);
+      border-radius: 50% 50% 50% 50%;
+      animation: flicker 0.2s infinite alternate;
+    }
+
+    @keyframes flicker {
+      from { transform: translateX(-50%) scale(1); opacity: 1; }
+      to { transform: translateX(-50%) scale(1.2); opacity: 0.85; }
+    }
+
+    /* Confetti 🎊 */
+    .confetti {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      background-color: red;
+      top: -10px;
+      border-radius: 2px;
+      animation: fall linear forwards;
+      opacity: 0.9;
+    }
+
+    @keyframes fall {
+      to {
+        transform: translateY(100vh) rotate(720deg);
+        opacity: 0.8;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1 id="greeting">SELAMAT ULANG TAHUN KE-21<br>YANA</h1>
+
+  <div class="cake">
+    <div class="icing"></div>
+    <div class="candle">
+      <div class="flame"></div>
+    </div>
+  </div>
+
+  <script>
+    window.addEventListener("load", () => {
+      const greeting = document.getElementById("greeting");
+      const cake = document.querySelector(".cake");
+
+      // Show greeting
+      setTimeout(() => {
+        greeting.style.opacity = "1";
+      }, 800);
+
+      // Show cake with bounce effect
+      setTimeout(() => {
+        cake.style.opacity = "1";
+      }, 2000);
+
+      // Confetti generator 🎊
+      function createConfetti() {
+        const confetti = document.createElement("div");
+        confetti.classList.add("confetti");
+        confetti.style.left = Math.random() * window.innerWidth + "px";
+        confetti.style.backgroundColor = 
+          `hsl(${Math.random() * 360}, 100%, 50%)`;
+        confetti.style.animationDuration = (Math.random() * 3 + 2) + "s";
+        confetti.style.width = confetti.style.height = (Math.random() * 8 + 5) + "px";
+        document.body.appendChild(confetti);
+
+        setTimeout(() => {
+          confetti.remove();
+        }, 6000);
+      }
+
+      setInterval(createConfetti, 150);
+    });
+
+    // Redirect when clicking anywhere
+    document.body.addEventListener("click", () => {
+      window.location.href = "index.html";
+    });
+  </script>
+</body>
+</html>

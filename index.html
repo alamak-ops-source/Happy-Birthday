@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Happy Birthday Yana !</title>
+  <link rel="icon" type="image/png" href="2.png">
+  <style>
+    /* ===== Reset & base ===== */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html,body { height: 100%; }
+    body {
+      font-family: "Poppins", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      color: #111;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      transition: background 0.4s;
+      background: linear-gradient(135deg, #ff9a9e, #fad0c4, #a18cd1, #fbc2eb, #84fab0, #8fd3f4);
+      background-size: 800% 800%;
+      animation: gradientShift 18s ease infinite;
+    }
+    @keyframes gradientShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    /* ===== Card ===== */
+    .card {
+      width: 100%;
+      max-width: 380px;
+      background: rgba(255,255,255,0.14);
+      border: 1px solid rgba(255,255,255,0.22);
+      border-radius: 22px;
+      padding: 30px 22px;
+      box-shadow: 0 12px 40px rgba(8,8,20,0.18);
+      backdrop-filter: blur(12px);
+      text-align: center;
+      position: relative;
+      z-index: 5;
+      animation: cardIn .6s cubic-bezier(.2,.9,.3,1);
+    }
+    @keyframes cardIn {
+      from { transform: translateY(10px) scale(.98); opacity: 0; }
+      to   { transform: translateY(0) scale(1);     opacity: 1; }
+    }
+
+    h1 {
+      font-size: 1.9rem;
+      color: white;
+      text-shadow: 0 6px 18px rgba(0,0,0,0.2);
+      margin-bottom: 8px;
+    }
+    p.lead {
+      color: rgba(255,255,255,0.95);
+      font-size: 1rem;
+      line-height: 1.45;
+      margin-bottom: 18px;
+    }
+
+    .btn {
+      display: inline-block;
+      background: linear-gradient(135deg,#ff6ec4,#7873f5);
+      border: none;
+      color: white;
+      padding: 12px 26px;
+      border-radius: 28px;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      box-shadow: 0 8px 20px rgba(120,90,200,0.18);
+      transition: transform .16s ease, box-shadow .16s ease;
+    }
+    .btn:active { transform: translateY(2px) scale(.995); }
+    .btn:hover { transform: translateY(-3px) scale(1.02); }
+
+    /* subtle floating hearts behind card for extra vibe */
+    .floating-heart {
+      pointer-events: none;
+      position: absolute;
+      z-index: 2;
+      opacity: .85;
+      filter: drop-shadow(0 6px 18px rgba(0,0,0,0.18));
+      transform-origin: center;
+    }
+    .heart-1 { left: 12%; bottom: 6%; width: 58px; animation: heartFloat 12s linear infinite; }
+    .heart-2 { left: 72%; bottom: 14%; width: 44px; animation: heartFloat 14s linear .8s infinite; }
+    @keyframes heartFloat {
+      0% { transform: translateY(0) rotate(0) scale(1); opacity: 1; }
+      50% { transform: translateY(-22vh) rotate(8deg) scale(1.06); opacity: .6; }
+      100% { transform: translateY(-46vh) rotate(-6deg) scale(1.1); opacity: 0; }
+    }
+
+    /* ===== Balloons (decorative) ===== */
+    .balloon {
+      position: absolute;
+      bottom: -150px;
+      width: 56px; height: 78px; border-radius: 50%;
+      box-shadow: 0 8px 22px rgba(0,0,0,0.18);
+      transform-origin: center;
+      z-index: 1; opacity: 0.94;
+    }
+    .balloon::after {
+      content: ""; width: 2px; height: 44px; background: rgba(255,255,255,0.9);
+      position: absolute; left: 50%; transform: translateX(-50%); bottom: -44px; border-radius: 2px;
+    }
+    .b1 { left: 12%; background: #ff4d6d; animation: floatUp 14s linear 0s infinite; }
+    .b2 { left: 50%; background: #ffd93d; animation: floatUp 15s linear 3s infinite; }
+    .b3 { left: 80%; background: #4d96ff; animation: floatUp 13s linear 6s infinite; }
+    @keyframes floatUp { 0% { transform: translateY(0) } 100% { transform: translateY(-140vh) } }
+
+    /* ===== Confetti canvas ===== */
+    canvas.confetti-canvas {
+      position: fixed; inset: 0; width: 100%; height: 100%; z-index: 3; pointer-events: none;
+    }
+
+    /* ===== Modal ===== */
+    .modal {
+      display: none; /* toggled with .open class */
+      position: fixed;
+      inset: 0;
+      background: rgba(6,6,10,0.6);
+      z-index: 60;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      -webkit-overflow-scrolling: touch;
+    }
+    .modal.open { display: flex; }
+
+    .modal-card {
+      width: 100%;
+      max-width: 520px;
+      background: linear-gradient(180deg, #ffffff, #fffafc);
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 20px 50px rgba(4,8,30,0.4);
+      position: relative;
+      overflow: hidden;
+      max-height: 86vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .modal-head {
+      display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:8px;
+    }
+    .modal-head h2 { margin:0; color:#ff4d6d; font-size:1.25rem; }
+    .close-btn {
+      background: transparent; border: none; font-size: 1.6rem; cursor: pointer; color: #ff6a7a;
+      line-height: 1;
+    }
+
+    .modal-body {
+      overflow-y: auto;
+      padding-right: 6px;
+    }
+    .modal-body p {
+      color: #222;
+      line-height: 1.6;
+      margin-bottom: 14px;
+      white-space: pre-wrap;
+    }
+
+    .modal-content p {
+        text-align: justify;
+    }
+
+    .photo-section {
+      margin-top: 10px;
+      text-align: center;
+    }
+    .photo-section h3 { margin-bottom: 8px; color: #333; font-size: 1rem; }
+    .photo-section img {
+      width: 100%;
+      border-radius: 12px;
+      display: block;
+      max-height: 320px;
+      object-fit: cover;
+      box-shadow: 0 8px 26px rgba(8,8,20,0.12);
+    }
+
+    /* lock scroll on body when modal open */
+    .no-scroll { overflow: hidden; touch-action: none; }
+
+    /* ===== Responsive tweaks ===== */
+    @media (max-width: 480px) {
+      .card { padding: 22px; border-radius: 18px; }
+      h1 { font-size: 1.6rem; }
+      .btn { padding: 11px 20px; font-size: 0.95rem; }
+      .modal-card { padding: 16px; border-radius: 14px; max-width: 96%; }
+      .photo-section img { max-height: 260px; }
+    }
+
+    .watermark {
+        position: fixed;
+        bottom: 15px;   /* distance from bottom */
+        left: 20px;     /* distance from left */
+        font-size: 1rem; 
+        font-style: italic;  /* signature vibe */
+        color: rgba(0, 0, 0, 0.597); /* soft, faded black */
+        pointer-events: none; /* doesn’t block clicks */
+        z-index: 999;
+    }
+
+
+  </style>
+</head>
+<body>
+  <!-- Floating hearts & balloons are purely decorative -->
+  <svg class="floating-heart heart-1" viewBox="0 0 24 24" fill="none" aria-hidden>
+    <path d="M12 21s-7.5-4.35-9.5-7.5C-0.5 9.5 4 4.9 8.5 6.5 10.4 7.2 12 9.4 12 9.4s1.6-2.2 3.5-2c4.5 1.4 9 3.9 5 7.1C19.5 16.65 12 21 12 21z"
+          fill="rgba(255,255,255,0.35)"/>
+  </svg>
+
+  <svg class="floating-heart heart-2" viewBox="0 0 24 24" fill="none" aria-hidden>
+    <path d="M12 21s-7.5-4.35-9.5-7.5C-0.5 9.5 4 4.9 8.5 6.5 10.4 7.2 12 9.4 12 9.4s1.6-2.2 3.5-2c4.5 1.4 9 3.9 5 7.1C19.5 16.65 12 21 12 21z"
+          fill="rgba(255,255,255,0.25)"/>
+  </svg>
+
+  <div class="balloon b1" aria-hidden></div>
+  <div class="balloon b2" aria-hidden></div>
+  <div class="balloon b3" aria-hidden></div>
+
+  <!-- Main card -->
+  <div class="card" role="region" aria-label="Birthday card">
+    <h1>Happy Birthday Yana</h1>
+    <p class="lead">Hehe, penat au i buat ni untuk u, I harap U suka la dgn benda-benda gini, huhu, sorry</p>
+    <button class="btn" id="openBtn" aria-haspopup="dialog">Cer U Tekan</button>
+  </div>
+
+  <!-- Modal (hidden until opened) -->
+  <div id="wishModal" class="modal" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="modal-card" role="document">
+      <div class="modal-head">
+        <h2>Nur Aliana Wanita Hebat Yang I Pernah Jumpa</h2>
+        <button class="close-btn" id="closeBtn" aria-label="Close">×</button>
+      </div>
+
+      <div class="modal-body" id="modalBody">
+        <p id="longWish">
+Assalamualaikum U,
+Selamat Ulang Tahun Yang Ke-21, hehe, U dh tua werk, Tq au sbb buat mcm2 untuk I, I sgt menghargai semua jasa2 yang u pernah buat untuk i selama ni, I x pernah pun lupa satu pun jasa2 yang u pernah buat untuk I, Tq byk2 au, I always appreciate semua pengorbanan U.
+
+I nk minta maaf kalau i ada terkasar bahasa atau melukakan hati u selama ni, I tahu ja U byk terasa dgn I, I minta maaf byk2 tau sbb byk lukakan hati U, hehe sowwy.
+
+Hmmmm... Sorry tau sbb x mampu bg apa2 tahun ni, I mampu buat ni jela untuk bg u happy. Sorry byk2 tau u, I hope u like it
+
+Apa2 pun I sentiasa doakan yang terbaik untuk U. Insyaallah. Amin Ya Rabbal Alamin.
+        </p>
+
+        <div class="photo-section" aria-hidden="false">
+          <!-- replace `your-photo.jpg` with your captured photo file -->
+          <img id="couplePhoto" src="1.jpg" alt="Us together" style="width:100%; height:100%; object-fit:cover;">
+          <h5>2 September 2025</h5>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="watermark">
+    Yang Ikhlas, <br>
+    Solihin Hensem
+  </div>
+
+  <!-- confetti library (CDN) -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+  <script>
+    // Elements
+    const openBtn = document.getElementById('openBtn');
+    const modal = document.getElementById('wishModal');
+    const closeBtn = document.getElementById('closeBtn');
+
+    // Launch confetti and then open modal
+    function launchConfettiAndOpenModal() {
+      const duration = 2.4 * 1000;
+      const end = Date.now() + duration;
+
+      // small looped bursts left + right
+      (function frame() {
+        confetti({
+          particleCount: 8,
+          angle: 60,
+          spread: 55,
+          origin: { x: 0.1, y: 0.6 }
+        });
+        confetti({
+          particleCount: 8,
+          angle: 120,
+          spread: 55,
+          origin: { x: 0.9, y: 0.6 }
+        });
+
+        if (Date.now() < end) {
+          requestAnimationFrame(frame);
+        }
+      })();
+
+      // open modal shortly after confetti starts (timing for nicer reveal)
+      setTimeout(openModal, 820);
+    }
+
+    function openModal() {
+      modal.classList.add('open');
+      modal.setAttribute('aria-hidden', 'false');
+      document.body.classList.add('no-scroll');
+      // focus on close button for accessibility
+      closeBtn.focus();
+    }
+
+    function closeModal() {
+      modal.classList.remove('open');
+      modal.setAttribute('aria-hidden', 'true');
+      document.body.classList.remove('no-scroll');
+      openBtn.focus();
+    }
+
+    // click handlers
+    openBtn.addEventListener('click', launchConfettiAndOpenModal);
+    closeBtn.addEventListener('click', closeModal);
+    // close when clicking outside the modal card
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) closeModal();
+    });
+    // close on Escape
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && modal.classList.contains('open')) closeModal();
+    });
+
+    // Optional: if you want to replace the placeholder image via JS
+    // document.getElementById('couplePhoto').src = 'path/to/your/photo.jpg';
+  </script>
+</body>
+</html>
